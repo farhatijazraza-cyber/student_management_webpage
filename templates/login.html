@@ -7,6 +7,14 @@
 
     <h2>School ERP Login</h2>
 
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <p style="color:red;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
     <form method="POST">
 
         <input type="text" name="username" placeholder="Username" required>

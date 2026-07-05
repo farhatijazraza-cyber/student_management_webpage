@@ -2,11 +2,17 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 import sqlite3
 from werkzeug.utils import secure_filename
 import os
+from flask_login import login_required
 
 admission_bp = Blueprint('admission', __name__, url_prefix='/admission')
 
 DB_PATH = "school.db"
 
+
+@admission_bp.route("/admission")
+@login_required
+def admission():
+    return render_template("admission.html")
 # ---------- Add Student (Admission Home) ----------
 @admission_bp.route("/", methods=["GET", "POST"])
 def admission_home():

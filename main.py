@@ -4,6 +4,7 @@ from modules.admission import admission_bp
 from modules.exams import exams_bp
 from modules.fees import fees_bp
 from modules.attendance import attendance_bp
+from flask_login import login_required
 
 from flask_login import (
     LoginManager,
