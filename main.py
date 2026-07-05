@@ -5,6 +5,7 @@ from modules.exams import exams_bp
 from modules.fees import fees_bp
 from modules.attendance import attendance_bp
 from flask_login import login_required
+import sqlite3
 
 from flask_login import (
     LoginManager,
@@ -84,13 +85,23 @@ def logout():
 
 # ---------------- DASHBOARD ----------------
 @app.route("/")
-def home():
-    return redirect(url_for("login"))
-
-@app.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+
+    conn = sqlite3.connect("school.db")
+
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM students")
+
+    total_students = cursor.fetchone()[0]
+
+    conn.close()
+
+    return render_template(
+        "dashboard.html",
+        total_students=total_students
+    )
 
 # ---------------- REGISTER BLUEPRINTS ----------------
 app.register_blueprint(admission_bp)

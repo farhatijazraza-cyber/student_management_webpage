@@ -1,0 +1,96 @@
+body{
+    background-color:#f4f6f9;
+    font-family:Arial, sans-serif;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:250px;
+    height:100vh;
+    position:fixed;
+    background:#1e293b;
+    padding-top:20px;
+}
+
+.sidebar a{
+    color:white;
+    display:block;
+    padding:15px 20px;
+    text-decoration:none;
+    transition:0.3s;
+    font-size:15px;
+}
+
+.sidebar a:hover{
+    background:#334155;
+    padding-left:25px;
+}
+
+.brand-title{
+    color:white;
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:30px;
+}
+
+/* MAIN CONTENT */
+
+.main-content{
+    margin-left:250px;
+    padding:20px;
+}
+
+.top-navbar{
+    background:white;
+    padding:15px 20px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom:20px;
+}
+
+/* DASHBOARD CARDS */
+
+.dashboard-card{
+    border-radius:15px;
+    transition:all 0.3s ease;
+}
+
+.dashboard-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 15px 25px rgba(0,0,0,0.2) !important;
+}
+
+.card-body{
+    padding:40px 20px;
+}
+
+/* BUTTONS */
+
+.btn{
+    border-radius:10px;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .sidebar{
+        width:100%;
+        height:auto;
+        position:relative;
+    }
+
+    .main-content{
+        margin-left:0;
+    }
+}
+
+/* PRINT */
+
+@media print{
+    .no-print{
+        display:none !important;
+    }
+}
