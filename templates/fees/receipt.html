@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    @media print {
+        .no-print { display: none !important; }
+        .voucher-copy { border-bottom: 2px dashed #000; padding-bottom: 30px; margin-bottom: 30px; }
+    }
+    .voucher-card { border: 2px solid #333; padding: 15px; background: #fff; }
+    .label-col { font-weight: bold; width: 40%; }
+</style>
+
+<div class="container mt-4">
+    <div class="no-print mb-4 d-flex justify-content-between">
+        <a href="{{ url_for('fees.fees_home') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to List</a>
+        <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print"></i> Print Voucher</button>
+    </div>
+
+    {% set copies = ['School Copy', 'Student Copy', 'Bank Copy'] %}
+    {% for copy in copies %}
+    <div class="voucher-copy">
+        <div class="voucher-card mx-auto shadow-sm" style="max-width: 800px;">
+            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                <div>
+                    <h3 class="mb-0 fw-bold text-uppercase">School ERP System</h3>
+                    <small>Official Fee Voucher | 2026</small>
+                </div>
+                <div class="text-end">
+                    <span class="badge bg-dark fs-6">{{ copy }}</span><br>
+                    <small>Voucher # {{ receipt.id }}</small>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-6">
+                    <p class="mb-1"><strong>Student:</strong> {{ receipt.name }}</p>
+                    <p class="mb-1"><strong>Father:</strong> {{ receipt.father_name }}</p>
+                    <p class="mb-1"><strong>Class:</strong> {{ receipt.class_name }}</p>
+                </div>
+                <div class="col-6 text-end">
+                    <p class="mb-1"><strong>Month:</strong> {{ receipt.month }}</p>
+                    <p class="mb-1"><strong>Date:</strong> {{ receipt.payment_date }}</p>
+                </div>
+            </div>
+
+            <table class="table table-bordered border-dark">
+    <thead class="table-light">
+        <tr>
+            <th>Description</th>
+            <th class="text-end">Amount (PKR)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Monthly Fee + Previous Arrears</td>
+            <td class="text-end">{{ receipt.total_payable }}</td>
+        </tr>
+        <tr class="text-success fw-bold">
+            <td>Amount Paid Now (Jo abhi diya)</td>
+            <td class="text-end">- {{ receipt.paid_amount }}</td>
+        </tr>
+        <tr class="table-danger">
+            <td class="fw-bold">REMAINING BALANCE (Baqi)</td>
+            <td class="text-end fw-bold">Rs. {{ receipt.remaining_balance }}</td>
+        </tr>
+    </tbody>
+</table>
+
+            <div class="d-flex justify-content-between mt-5 pt-3">
+                <div class="text-center" style="width: 200px; border-top: 1px solid #000;">
+                    <small>Cashier Signature</small>
+                </div>
+                <div class="text-center" style="width: 200px; border-top: 1px solid #000;">
+                    <small>Parent Signature</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

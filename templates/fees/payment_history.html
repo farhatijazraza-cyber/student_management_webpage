@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3><i class="fas fa-history me-2"></i> Payment Collection History</h3>
+        <div class="bg-success text-white p-3 rounded shadow-sm">
+            <h5 class="mb-0">Total Cash Collected: Rs. {{ total }}</h5>
+        </div>
+    </div>
+
+    <div class="card mb-4 border-0 shadow-sm bg-light">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <label class="fw-bold small text-muted">Filter by Payment Date:</label>
+                    <input type="date" id="dateFilter" class="form-control" onchange="filterByDate()">
+                </div>
+                <div class="col-md-4 mt-4">
+                    <button class="btn btn-secondary btn-sm" onclick="resetFilter()">Show All</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow border-0">
+        <div class="card-body">
+            <table class="table table-hover align-middle" id="historyTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Date</th>
+                        <th>Student Name</th>
+                        <th>Month</th>
+                        <th>Amount Paid</th>
+                        <th>Total Payable</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in history %}
+                    <tr data-date="{{ item.payment_date }}">
+                        <td class="fw-bold">{{ item.payment_date if item.payment_date else 'N/A' }}</td>
+                        <td>
+                            <strong>{{ item.name }}</strong><br>
+                            <small class="text-muted">{{ item.class_name }}</small>
+                        </td>
+                        <td>{{ item.month }}</td>
+                        <td class="text-success fw-bold">Rs. {{ item.paid_amount }}</td>
+                        <td>Rs. {{ item.total_payable }}</td>
+                        <td>
+                            <span class="badge {% if item.status == 'Paid' %}bg-success{% else %}bg-info{% endif %}">
+                                {{ item.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('fees.view_receipt', v_id=item.id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="{{ url_for('fees.delete_payment', v_id=item.id) }}" 
+           class="btn btn-sm btn-outline-danger" 
+           onclick="return confirm('Kya aap waqai ye payment delete karna chahte hain? Is se agle mahino ka balance (arrears) wapis barh jayega!')">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+    </div>
+</td>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function filterByDate() {
+    let inputDate = document.getElementById('dateFilter').value;
+    let rows = document.querySelectorAll("#historyTable tbody tr");
+    
+    rows.forEach(row => {
+        let rowDate = row.getAttribute('data-date');
+        // Agar input khali hai ya date match karti hai
+        if (inputDate === "" || rowDate === inputDate) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
+
+function resetFilter() {
+    document.getElementById('dateFilter').value = "";
+    filterByDate();
+}
+</script>
+{% endblock %}

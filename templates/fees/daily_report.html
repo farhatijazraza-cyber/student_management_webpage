@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+        <h3><i class="fas fa-file-invoice-dollar me-2"></i> Daily Collection Report</h3>
+        <button onclick="window.print()" class="btn btn-dark">
+            <i class="fas fa-print me-1"></i> Print Report
+        </button>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white shadow-sm">
+                <div class="card-body">
+                    <h5>Total Cash</h5>
+                    <h3>Rs. {{ cash }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white shadow-sm">
+                <div class="card-body">
+                    <h5>Bank/Online</h5>
+                    <h3>Rs. {{ bank }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white shadow-sm">
+                <div class="card-body">
+                    <h5>Grand Total ({{ today }})</h5>
+                    <h3>Rs. {{ total }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow border-0">
+        <div class="card-header bg-white fw-bold">Transaction Details</div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th>Method</th>
+                        <th class="text-end">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in payments %}
+                    <tr>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.class_name }}</td>
+                        <td><span class="badge bg-secondary">{{ p.payment_method }}</span></td>
+                        <td class="text-end fw-bold">Rs. {{ p.paid_amount }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">Aaj koi payment wasool nahi hui.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    .no-print, .btn, .navbar, .sidebar { display: none !important; }
+    .container { width: 100% !important; max-width: 100% !important; }
+}
+</style>
+{% endblock %}

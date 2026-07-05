@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-dark">The Arqam School ERP Dashboard</h1>
+        <p class="lead text-muted">Welcome to The Arqam Schools Hujra Management System</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-3">
+            <a href="{{ url_for('admission.admission_home') }}" class="text-decoration-none">
+                <div class="card bg-primary text-white shadow-sm h-100 border-0 transition-hover">
+                    <div class="card-body text-center py-4">
+                        <i class="fas fa-user-plus fa-3x mb-3"></i>
+                        <h5 class="fw-bold">Admission</h5>
+                        <small class="opacity-75">Register Students</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{{ url_for('exams.exams_home') }}" class="text-decoration-none">
+                <div class="card bg-success text-white shadow-sm h-100 border-0 transition-hover">
+                    <div class="card-body text-center py-4">
+                        <i class="fas fa-file-alt fa-3x mb-3"></i>
+                        <h5 class="fw-bold">Exams</h5>
+                        <small class="opacity-75">Marks & Date Sheets</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{{ url_for('fees.fees_home') }}" class="text-decoration-none">
+                <div class="card bg-warning text-white shadow-sm h-100 border-0 transition-hover">
+                    <div class="card-body text-center py-4">
+                        <i class="fas fa-file-invoice-dollar fa-3x mb-3"></i>
+                        <h5 class="fw-bold text-dark">Fees</h5>
+                        <small class="text-dark opacity-75">Payments & Invoices</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{{ url_for('attendance.attendance_home') }}" class="text-decoration-none">
+                <div class="card bg-danger text-white shadow-sm h-100 border-0 transition-hover">
+                    <div class="card-body text-center py-4">
+                        <i class="fas fa-user-check fa-3x mb-3"></i>
+                        <h5 class="fw-bold">Attendance</h5>
+                        <small class="opacity-75">Daily Records</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .transition-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .transition-hover:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+    }
+</style>
+{% endblock %}

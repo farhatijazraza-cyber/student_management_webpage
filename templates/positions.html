@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2 class="mb-4">🏆 Top Position Holders - {{ exam['exam_name'] }}</h2>
+    
+    <div class="row justify-content-center">
+        {% for student in students %}
+        <div class="col-md-3">
+            <div class="card shadow-lg border-0 mb-4">
+                <div class="card-body">
+                    {% if loop.index == 1 %}
+                        <h1 class="display-1">🥇</h1>
+                        <h4 class="text-warning">1st Position</h4>
+                    {% elif loop.index == 2 %}
+                        <h1 class="display-1">🥈</h1>
+                        <h4 class="text-secondary">2nd Position</h4>
+                    {% else %}
+                        <h1 class="display-1">🥉</h1>
+                        <h4 style="color: #cd7f32;">3rd Position</h4>
+                    {% endif %}
+                    
+                    <h3 class="mt-3">{{ student['name'] }}</h3>
+                    <p class="badge bg-primary fs-5">{{ "%.1f"|format(student['percentage']) }}%</p>
+                    <p class="text-muted">Total: {{ student['total_obtained'] }} / {{ student['total_allowed'] }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <a href="{{ url_for('exams.exams_home') }}" class="btn btn-dark mt-3">Back to Exams</a>
+</div>
+{% endblock %}

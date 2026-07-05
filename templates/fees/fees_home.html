@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card shadow-sm border-0 mb-4 h-100">
+                <div class="card-body bg-light">
+                    <h5 class="fw-bold text-primary mb-3"><i class="fas fa-file-invoice-dollar me-2"></i> Monthly Billing</h5>
+                    <form action="{{ url_for('fees.generate_vouchers') }}" method="POST" class="row g-2">
+                        <div class="col-6">
+                            <label class="small fw-bold text-muted mb-1">Set Monthly Fee (Rs.)</label>
+                            <input type="number" name="monthly_fee" class="form-control form-control-sm" value="3000" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="small fw-bold text-muted mb-1">Select Month</label>
+                            <select name="month" class="form-select form-select-sm" required>
+                                <option value="">Choose...</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                        </div>
+                        <div class="col-12 mt-3">
+                            <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">
+                                <i class="fas fa-plus"></i> Generate All Vouchers
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card shadow-sm border-warning mb-4 h-100">
+                <div class="card-body bg-light">
+                    <h6 class="fw-bold text-dark mb-3"><i class="fas fa-user-plus me-2"></i> Individual Voucher</h6>
+                    <form action="{{ url_for('fees.generate_single_voucher_post') }}" method="POST">
+                        <div class="mb-2">
+                            <select name="student_id" class="form-select form-select-sm" required>
+                                <option value="">Select Student...</option>
+                                {% for s in all_students %}
+                                <option value="{{ s.id }}">{{ s.name }} ({{ s.class_name }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <select name="month" class="form-select form-select-sm" required>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-warning btn-sm w-100 fw-bold">Generate Single</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4 border-info">
+        <div class="card-body py-2">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <h6 class="fw-bold mb-0 text-info"><i class="fas fa-print me-2"></i> Batch Printing:</h6>
+                <div class="d-flex gap-2">
+                    <select id="printClass" class="form-select form-select-sm w-auto">
+                        <option value="">Select Class...</option>
+                        {% for c in classes %}
+                            <option value="{{ c.class_name }}">{{ c.class_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <select id="printMonth" class="form-select form-select-sm w-auto">
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                    </select>
+                    <button onclick="goToBatchPrint()" class="btn btn-info btn-sm text-white px-3">
+                        View & Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow border-0">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="fas fa-list me-2"></i> Pending Vouchers</h4>
+            <input type="text" id="feeSearch" class="form-control form-control-sm w-25" placeholder="Search student name...">
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="feeTable">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Month</th>
+                        <th>Student Name</th>
+                        <th>Total Payable</th>
+                        <th>Arrears</th>
+                        <th>Paid</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in vouchers %}
+                    <tr>
+                        <td class="fw-bold">{{ v.month }} {{ v.year }}</td>
+                        <td>
+                            <div>{{ v.name }}</div>
+                            <small class="text-muted">{{ v.class_name }}</small>
+                        </td>
+                        <td>Rs. {{ v.total_payable }}</td>
+                        <td class="text-danger small">Rs. {{ v.arrears }}</td>
+                        <td class="text-success">Rs. {{ v.paid_amount }}</td>
+                        <td class="fw-bold text-primary">Rs. {{ v.remaining_balance }}</td>
+                        <td>
+                            {% if v.status == 'Paid' %}
+                                <span class="badge bg-success">Fully Paid</span>
+                            {% elif v.status == 'Partial' %}
+                                <span class="badge bg-info text-dark">Partial</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Unpaid</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex gap-1 justify-content-center">
+                                <a href="{{ url_for('fees.pay_voucher', v_id=v.id) }}" class="btn btn-success btn-sm">
+                                    <i class="fas fa-cash-register"></i> Collect
+                                </a>
+                                
+                                <a href="{{ url_for('fees.print_single', v_id=v.id) }}" class="btn btn-sm btn-dark" target="_blank">
+                                    <i class="fas fa-print"></i> Print
+                                </a>
+
+                                <a href="{{ url_for('fees.student_statement', s_id=v.student_id) }}" class="btn btn-sm btn-info text-white">
+                                    <i class="fas fa-file-invoice"></i> Statement
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5 text-muted">No vouchers found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function goToBatchPrint() {
+    let cls = document.getElementById('printClass').value;
+    let mon = document.getElementById('printMonth').value;
+    if(cls && mon) {
+        window.location.href = `/fees/print_batch/${cls}/${mon}`;
+    } else {
+        alert("Please select both Class and Month");
+    }
+}
+
+document.getElementById('feeSearch').addEventListener('keyup', function() {
+    let filter = this.value.toUpperCase();
+    let rows = document.querySelector("#feeTable tbody").rows;
+    for (let i = 0; i < rows.length; i++) {
+        let nameCol = rows[i].cells[1].textContent.toUpperCase();
+        if (nameCol.indexOf(filter) > -1) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+});
+</script>
+{% endblock %}

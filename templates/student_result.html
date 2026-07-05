@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="text-end mb-4 no-print">
+        <button onclick="window.print()" class="btn btn-primary shadow-sm">
+            <i class="fas fa-print"></i> Print Result Card
+        </button>
+        <a href="{{ url_for('exams.marks_page') }}" class="btn btn-secondary shadow-sm">Back</a>
+    </div>
+
+    <div class=""result-card shadow-lg mx-auto" style="max-width: 850px; border: 6px solid #002b5c; padding: 50px; background: white;">
+        
+        <div class="row align-items-center mb-4 border-bottom pb-3">
+            <div class="col-2">
+                <div class="logo-box border border-secondary d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; background: #f8f9fa;">
+                    {% set school_logo_url = url_for('static', filename='tas_logo.jpeg.jpg') %}
+                    {% if school_logo_url %}
+                        <img src="{{ school_logo_url }}" alt="Logo" style="width: 100%; height: auto;">
+                    {% else %}
+                        <span class="text-muted small text-center">School<br>Logo</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-8 text-center">
+                <h1 class="fw-bold mb-0" style="color: #002b5c; letter-spacing: 1px;">THE ARQAM SCHOOLS HUJRA</h1>
+                <p class="mb-1 text-muted">Affiliated with National Board of Education | Reg. No: 12345-ABC</p>
+                <p class="mb-0 fw-bold text-primary">ANNUAL EXAMINATION RESULT CARD - SESSION 2025-26</p>
+            </div>
+            <div class="col-2 text-end">
+                <div style="width: 80px; height: 80px; background: #eee; margin-left: auto;" class="d-flex align-items-center justify-content-center small text-muted">QR Code</div>
+            </div>
+        </div>
+
+        <div class="row mb-4 p-3 bg-light rounded shadow-sm border">
+            <div class="col-6">
+                <table class="table table-sm table-borderless mb-0">
+                    <tr><td><strong>Student Name:</strong></td><td>{{ student['name'] }}</td></tr>
+                    <tr><td><strong>Father's Name:</strong></td><td>{{ student['father_name'] if student['father_name'] else '---' }}</td></tr>
+                    <tr><td><strong>Class / Section:</strong></td><td>Grade 10 - A</td></tr>
+                </table>
+            </div>
+            <div class="col-6">
+                <table class="table table-sm table-borderless mb-0">
+                    <tr><td><strong>Roll Number:</strong></td><td>2026-{{ student['id'] }}</td></tr>
+                    <tr><td><strong>Issue Date:</strong></td><td>{{ "2026-02-22" }}</td></tr>
+                    <tr><td><strong>Status:</strong></td><td><span class="badge bg-success">REGULAR</span></td></tr>
+                </table>
+            </div>
+        </div>
+
+        <table class="table table-bordered border-dark text-center align-middle shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Sr.</th>
+                    <th style="text-align: left;">Subject Name</th>
+                    <th>Max Marks</th>
+                    <th>Obtained Marks</th>
+                    <th>Grade</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set ns = namespace(total_obtained=0, total_max=0) %}
+                {% for row in results %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td style="text-align: left; font-weight: 500;">{{ row['subject_name'] }}</td>
+                    <td>{{ row['total_marks'] }}</td>
+                    <td class="fw-bold">{{ row['marks_obtained'] }}</td>
+                    <td>
+                        {% set per = (row['marks_obtained'] / row['total_marks']) * 100 %}
+                        {% if per >= 90 %} A+ {% elif per >= 80 %} A {% elif per >= 70 %} B {% elif per >= 60 %} C {% else %} D {% endif %}
+                    </td>
+                    <td>
+                        {% if per >= 50 %} <span class="text-success">Pass</span> {% else %} <span class="text-danger">Fail</span> {% endif %}
+                    </td>
+                </tr>
+                {% set ns.total_obtained = ns.total_obtained + row['marks_obtained'] %}
+                {% set ns.total_max = ns.total_max + row['total_marks'] %}
+                {% endfor %}
+            </tbody>
+            <tfoot class="table-secondary fw-bold">
+                <tr>
+                    <td colspan="2" class="text-end">GRAND TOTAL:</td>
+                    <td>{{ ns.total_max }}</td>
+                    <td>{{ ns.total_obtained }}</td>
+                    <td colspan="2">
+                        {% set final_per = (ns.total_obtained / ns.total_max) * 100 if ns.total_max > 0 else 0 %}
+                        PERCENTAGE: {{ "%.1f"|format(final_per) }}%
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="row mt-5 pt-4">
+            <div class="col-4">
+                <div class="border p-2 text-center small">
+                    <strong>Final Grade:</strong><br>
+                    <span class="display-6">
+                        {% if final_per >= 80 %} A+ {% elif final_per >= 70 %} A {% elif final_per >= 60 %} B {% else %} C {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="col-4 text-center">
+                <div class="mt-5 border-top border-dark mx-auto" style="width: 150px;">
+                    <p class="small">Class Teacher</p>
+                </div>
+            </div>
+            <div class="col-4 text-center">
+                <div class="mt-5 border-top border-dark mx-auto" style="width: 150px;">
+                    <p class="small">Principal / Seal</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .result-card { border: 5px solid #333; }
+    .table-dark { background-color: #002b5c !important; }
+    @media print {
+        .no-print, .navbar { display: none !important; }
+        body { background-color: white !important; }
+        .container { max-width: 100% !important; margin: 0 !important; }
+        .result-card { border: none !important; box-shadow: none !important; margin-top: 0 !important; }
+    }
+</style>
+{% endblock %}

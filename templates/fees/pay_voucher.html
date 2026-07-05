@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Fee Collection - {{ v.name }}</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm borderless">
+                        <tr><td>Current Month Fee:</td><td class="text-end">Rs. {{ v.current_fee }}</td></tr>
+                        <tr><td>Previous Arrears:</td><td class="text-end text-danger">Rs. {{ v.arrears }}</td></tr>
+                        <tr class="fw-bold border-top"><td>Total Payable:</td><td class="text-end">Rs. {{ v.total_payable }}</td></tr>
+                        <tr><td>Already Paid:</td><td class="text-end text-success">Rs. {{ v.paid_amount }}</td></tr>
+                        <tr class="table-warning"><td><strong>Remaining Balance:</strong></td><td class="text-end"><strong>Rs. {{ v.remaining_balance }}</strong></td></tr>
+                    </table>
+
+                    <form method="POST" class="mt-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Enter Receiving Amount</label>
+                            <input type="number" name="receiving_amount" class="form-control form-control-lg" max="{{ v.remaining_balance }}" required>
+                        </div>
+                        <div class="mb-3">
+    <label class="form-label fw-bold"><i class="fas fa-wallet me-1"></i> Payment Method</label>
+    <select name="payment_method" class="form-select">
+        <option value="Cash">Cash (Naqad)</option>
+        <option value="Bank">Bank Transfer / EasyPaisa</option>
+        <option value="Cheque">Cheque</option>
+    </select>
+</div>
+                        <button type="submit" class="btn btn-success w-100 btn-lg">Submit Payment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white p-3">
+                    <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i> Student Admission Form</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('admission.admission_home') }}" enctype="multipart/form-data">
+                        
+                        <div class="mb-4 text-center">
+                            <label class="form-label fw-bold d-block">Student Photo</label>
+                            <input type="file" name="photo" class="form-control w-50 mx-auto" accept="image/*">
+                            <small class="text-muted">Max size: 2MB (JPG, PNG)</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Full Name</label>
+                                <input type="text" name="name" class="form-control" placeholder="Student Name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Father Name</label>
+                                <input type="text" name="father_name" class="form-control" placeholder="Father's Name">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Father's CNIC / ID Card</label>
+                                <input type="text" name="father_id" class="form-control" placeholder="12345-6789012-3">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Date of Birth</label>
+                                <input type="date" name="dob" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Class</label>
+                                <input type="text" name="class_name" class="form-control" placeholder="e.g. Grade 10" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Contact Number</label>
+                                <input type="text" name="contact" class="form-control" placeholder="Phone Number" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <div class="p-3 border rounded bg-light">
+                                    <label class="form-label fw-bold text-success"><i class="fas fa-tag"></i> Monthly Discount (Scholarship)</label>
+                                    <input type="number" name="discount" class="form-control" placeholder="Amount to be deducted every month (e.g. 500)" value="0">
+                                    <small class="text-muted">Enter 0 if no discount is applicable.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Residential Address</label>
+                            <textarea name="address" class="form-control" rows="2" placeholder="Complete address..."></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">Add Student</button>
+                            <a href="{{ url_for('admission.view_students') }}" class="btn btn-outline-info">
+                                <i class="fas fa-list me-1"></i> View Students List
+                            </a>
+                            <a href="{{ url_for('dashboard') }}" class="btn btn-link text-decoration-none">Back to Dashboard</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

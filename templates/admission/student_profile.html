@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Student Profile Card</h4>
+            <button onclick="window.print()" class="btn btn-light btn-sm shadow-sm">
+                <i class="fas fa-print"></i> Print Profile
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 text-center mb-3 border-end">
+                    {% if student['photo'] and student['photo'] != 'default.png' %}
+                        <img src="{{ url_for('static', filename='uploads/students/' + student['photo']) }}" 
+                             class="img-thumbnail rounded shadow-sm mb-3" style="width: 180px; height: 180px; object-fit: cover;">
+                    {% else %}
+                        <img src="https://ui-avatars.com/api/?name={{ student['name'] }}&size=150&background=random" 
+                             class="img-thumbnail rounded-circle mb-3" alt="Student Photo">
+                    {% endif %}
+                    
+                    <h5 class="text-muted mb-0">Roll Number</h5>
+                    <h3 class="fw-bold text-primary">TAS-2026-{{ "%03d" | format(student['id']) }}</h3>
+                    
+                    <span class="badge bg-success px-3 py-2">Active Student</span>
+                </div>
+
+                <div class="col-md-9">
+                    <h3 class="mb-4 text-dark fw-bold border-bottom pb-2">{{ student['name'] }}</h3>
+                    <table class="table table-hover">
+                        <tr>
+                            <th class="bg-light w-30"><i class="fas fa-fingerprint me-2 text-primary"></i> Registration ID</th>
+                            <td class="fw-bold">#{{ student['id'] }}</td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Father Name</th>
+                            <td>{{ student['father_id'] }}</td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light">Father ID Card</th>
+                            <td>{{ student['father_id'] }}</td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light"><i class="fas fa-chalkboard-teacher me-2 text-primary"></i> Current Class</th>
+                            <td><span class="badge bg-info text-dark fs-6">{{ student['class_name'] }}</span></td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light"><i class="fas fa-calendar-alt me-2 text-primary"></i> Date of Birth</th>
+                            <td>{{ student['dob'] }}</td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light"><i class="fas fa-phone-alt me-2 text-primary"></i> Emergency Contact</th>
+                            <td>{{ student['contact'] }}</td>
+                        </tr>
+                        <tr>
+                            <th class="bg-light"><i class="fas fa-map-marker-alt me-2 text-primary"></i> Residential Address</th>
+                            <td>{{ student['address'] }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-light d-flex justify-content-between">
+            <a href="{{ url_for('admission.view_students') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to List
+            </a>
+            <a href="{{ url_for('admission.edit_student', id=student['id']) }}" class="btn btn-warning px-4">
+                <i class="fas fa-user-edit me-1"></i> Edit Profile
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

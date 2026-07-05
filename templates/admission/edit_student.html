@@ -1,0 +1,55 @@
+<input type="text" name="name" value="{{ student['name'] }}" class="form-control" required>
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-warning text-dark p-3">
+                    <h4 class="mb-0"><i class="fas fa-user-edit me-2"></i> Edit Student Record</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('admission.edit_student', id=student['id']) }}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Full Name</label>
+                                <input type="text" name="name" class="form-control" value="{{ student['name'] }}" required>
+                            </div>
+                        <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Father Name</label>
+                                <input type="text" name="Father name" class="form-control" value="{{ student['Father name'] }}" required>
+                            </div>
+                
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Date of Birth</label>
+                                <input type="date" name="dob" class="form-control" value="{{ student['dob'] }}" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Class</label>
+                                <input type="text" name="class_name" class="form-control" value="{{ student['class_name'] }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Contact Number</label>
+                                <input type="text" name="contact" class="form-control" value="{{ student['contact'] }}" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Residential Address</label>
+                            <textarea name="address" class="form-control" rows="2">{{ student['address'] }}</textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Update Record</button>
+                            <a href="{{ url_for('admission.view_students') }}" class="btn btn-outline-secondary">Cancel & Go Back</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

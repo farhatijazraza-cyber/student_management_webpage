@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white text-center">
+            <h3>STUDENT PROGRESS REPORT</h3>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h5><strong>Name:</strong> {{ student.name }}</h5>
+                    <p><strong>Class:</strong> {{ student.class_name }}</p>
+                </div>
+                <div class="col-6 text-end">
+                    <p><strong>Student ID:</strong> #{{ student.id }}</p>
+                    <p><strong>Date:</strong> {{ student.dob }}</p>
+                </div>
+            </div>
+
+            <table class="table table-bordered text-center">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Exam Name</th>
+                        <th>Subject</th>
+                        <th>Marks Obtained</th>
+                        <th>Total Marks</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in report %}
+                    <tr>
+                        <td>{{ row.exam_name }}</td>
+                        <td>{{ row.subject_name }}</td>
+                        <td>{{ row.marks_obtained }}</td>
+                        <td>{{ row.total_marks }}</td>
+                        <td>
+                            {% set percentage = (row.marks_obtained / row.total_marks) * 100 %}
+                            {{ "%.1f"|format(percentage) }}%
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5">No records found for this student.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="mt-4 no-print text-center">
+                <button onclick="window.print()" class="btn btn-primary">Print Report Card</button>
+                <a href="{{ url_for('exams.marks_page') }}" class="btn btn-secondary">Back to Marks</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+        .no-print { display: none; }
+        .container { width: 100%; margin: 0; }
+    }
+</style>
+{% endblock %}

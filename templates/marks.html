@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card border-primary shadow-sm">
+                <div class="card-header bg-primary text-white">Add New Subject</div>
+                <div class="card-body">
+                    <form action="{{ url_for('exams.add_subject') }}" method="POST">
+                        <input type="text" name="subject_name" class="form-control mb-2" placeholder="Subject Name" required>
+                        <button class="btn btn-primary w-100">Add Subject</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 mb-4">
+            <div class="card border-success shadow-sm">
+                <div class="card-header bg-success text-white">Enter Student Marks</div>
+                <div class="card-body">
+                    <form action="{{ url_for('exams.add_marks') }}" method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label class="small">Student</label>
+                                <select name="student_id" class="form-select" required>
+                                    <option value="">Select Student</option>
+                                    {% for s in students %}
+                                        <option value="{{ s['id'] }}">{{ s['name'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="small">Exam</label>
+                                <select name="exam_id" class="form-select" required>
+                                    <option value="">Select Exam</option>
+                                    {% for e in exams %}
+                                        <option value="{{ e['id'] }}">{{ e['exam_name'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="small">Subject</label>
+                                <select name="subject_id" class="form-select" required>
+                                    <option value="">Select Subject</option>
+                                    {% for sub in subjects %}
+                                        <option value="{{ sub['id'] }}">{{ sub['subject_name'] }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label class="small">Obtained</label>
+                                <input type="number" name="marks_obtained" class="form-control" required>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label class="small">Total</label>
+                                <input type="number" name="total_marks" class="form-control" value="100">
+                            </div>
+                        </div>
+                        <button class="btn btn-success w-100 mt-2">Save Marks Record</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">Marks Sheet</div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>Student</th>
+                        <th>Exam</th>
+                        <th>Subject</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in marks %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('exams.student_report', student_id=m['student_id']) }}">
+                                {{ m['name'] }}
+                            </a>
+                        </td>
+                        <td>{{ m['exam_name'] }}</td>
+                        <td>{{ m['subject_name'] }}</td>
+                        <td><strong>{{ m['marks_obtained'] }}</strong> / {{ m['total_marks'] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">No marks recorded yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

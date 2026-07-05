@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card border-0 shadow-sm p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-0">STUDENT ACCOUNT STATEMENT</h2>
+                <p class="text-muted">Personalized Ledger for the current session</p>
+            </div>
+            <button onclick="window.print()" class="btn btn-outline-dark no-print">
+                <i class="fas fa-print me-1"></i> Print Statement
+            </button>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h5><strong>Student Name:</strong> {{ student.name }}</h5>
+                <p class="mb-1"><strong>Father Name:</strong> {{ student.father_name }}</p>
+                <p><strong>Class:</strong> {{ student.class_name }}</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="p-3 bg-light rounded">
+                    <p class="mb-1 text-danger fw-bold">Current Outstanding Balance:</p>
+                    <h3 class="mb-0">Rs. {{ balance }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <table class="table table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Month</th>
+                    <th>Fee Generated (Billed)</th>
+                    <th>Amount Paid</th>
+                    <th>Payment Date</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in history %}
+                <tr>
+                    <td>{{ row.month }}</td>
+                    <td>Rs. {{ row.total_payable }}</td>
+                    <td class="text-success fw-bold">Rs. {{ row.paid_amount }}</td>
+                    <td>{{ row.payment_date if row.payment_date else '-' }}</td>
+                    <td class="text-danger">Rs. {{ row.remaining_balance }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot class="table-light fw-bold">
+                <tr>
+                    <td>TOTALS</td>
+                    <td>Rs. {{ billed }}</td>
+                    <td class="text-success">Rs. {{ paid }}</td>
+                    <td>-</td>
+                    <td class="text-danger">Rs. {{ balance }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<style>
+@media print {
+    .no-print { display: none !important; }
+    body { background-color: white !important; }
+}
+</style>
+{% endblock %}

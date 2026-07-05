@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+        <h2>📅 Date Sheet: {{ exam['exam_name'] }}</h2>
+        <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print"></i> Print Date Sheet</button>
+    </div>
+
+    <div class="card mb-4 no-print shadow-sm">
+        <div class="card-header bg-dark text-white">Add Paper Schedule</div>
+        <div class="card-body">
+            <form action="{{ url_for('exams.add_datesheet_entry') }}" method="POST" class="row g-3">
+                <input type="hidden" name="exam_id" value="{{ exam['id'] }}">
+                <div class="col-md-3">
+                    <label>Subject</label>
+                    <select name="subject_id" class="form-select" required>
+                        {% for s in subjects %}
+                        <option value="{{ s['id'] }}">{{ s['subject_name'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label>Date</label>
+                    <input type="date" name="exam_date" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                    <label>Start Time</label>
+                    <input type="time" name="start_time" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                    <label>End Time</label>
+                    <input type="time" name="end_time" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                    <label>Room</label>
+                    <input type="text" name="room_no" class="form-control" placeholder="Hall-A">
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button class="btn btn-success w-100">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="datesheet-paper p-5 bg-white border border-dark shadow">
+        <div class="text-center mb-4">
+            <h3>NATIONAL EXCELLENCE ACADEMY</h3>
+            <h5 class="text-decoration-underline text-uppercase">{{ exam['exam_name'] }} - DATE SHEET</h5>
+        </div>
+
+        <table class="table table-bordered border-dark text-center align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Date</th>
+                    <th>Day</th>
+                    <th>Subject</th>
+                    <th>Timing</th>
+                    <th>Room</th>
+                </tr>
+            </thead>
+            <tbody>
+    {% for row in datesheet %}
+    <tr>
+        <td>{{ row['exam_date'] }}</td>
+        
+        <td class="text-uppercase small fw-bold">
+            {{ row['exam_date'] | datetimeformat }} 
+            {# Note: Iske liye humein niche wala filter register karna hoga #}
+        </td>
+
+        <td class="fw-bold text-primary">{{ row['subject_name'] }}</td>
+        <td>
+            <span class="badge bg-light text-dark border">
+                {{ row['start_time'] }} - {{ row['end_time'] }}
+            </span>
+        </td>
+        <td><i class="fas fa-door-open me-1"></i>{{ row['room_no'] }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5" class="text-center text-muted py-4">No schedule added for this exam yet.</td></tr>
+    {% endfor %}
+</tbody>
+        </table>
+        
+        <div class="mt-5 d-flex justify-content-between px-4">
+            <p class="small">Date of Issue: 23-Feb-2026</p>
+            <p class="small border-top border-dark px-3">Principal Signature</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+        .no-print { display: none !important; }
+        body { background: white; }
+        .datesheet-paper { border: none !important; box-shadow: none !important; }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Arqam School ERP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg shadow-sm no-print">
+    ...
+</nav>
+
+<style>
+    @media print {
+        .no-print { display: none !important; }
+    }
+</style>
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{{ url_for('dashboard') }}">
+            <i class="fas fa-school"></i> The Arqam School ERP
+        </a>
+
+        <div class="ms-auto">
+            <a class="btn btn-outline-light btn-sm me-1" href="{{ url_for('admission.admission_home') }}">
+                <i class="fas fa-user-plus"></i> Admission
+            </a>
+            <a class="btn btn-outline-light btn-sm me-1" href="{{ url_for('exams.exams_home') }}">
+                <i class="fas fa-file-invoice"></i> Exams
+            </a>
+            <a class="btn btn-outline-light btn-sm me-1" href="{{ url_for('fees.fees_home') }}">
+                <i class="fas fa-money-bill-wave"></i> Fees
+            </a>
+            <a class="nav-link" href="{{ url_for('fees.payment_history') }}">Payment History</a>
+            <a class="nav-link" href="{{ url_for('fees.daily_report') }}">Daily Report</a>
+            <a class="btn btn-outline-light btn-sm" href="{{ url_for('attendance.attendance_home') }}">
+                <i class="fas fa-user-check"></i> Attendance
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

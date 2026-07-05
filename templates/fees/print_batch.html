@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Print Vouchers - {{ class_name }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+    @page {
+        size: A4;
+        margin: 0; /* Browser margins ko zero karein taake hum khud control karein */
+    }
+
+    @media print {
+        .no-print { display: none; }
+        body { margin: 0; padding: 0; }
+        .container { width: 100% !important; max-width: none !important; margin: 0 !important; }
+    }
+
+    .voucher-card {
+        border: 2px solid #000;
+        margin: 10mm; /* Card ke bahar jagah */
+        padding: 10mm; /* Card ke andar jagah */
+        height: 138mm; /* A4 height 297mm hoti hai, aadha takreeban 148mm banta hai */
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .divider {
+        border-top: 2px dashed #000;
+        text-align: center;
+        height: 0;
+        margin: 0;
+        position: relative;
+    }
+
+    .divider:after {
+        content: "✂ Scissors Cut";
+        font-size: 10px;
+        position: absolute;
+        top: -10px;
+        left: 45%;
+        background: white;
+        padding: 0 5px;
+    }
+</style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-3 no-print text-center">
+    <button onclick="window.print()" class="btn btn-primary btn-lg mb-4">Click to Print</button>
+</div>
+
+<div class="container">
+    {% for v in vouchers %}
+        {# Yahan hum 2 baar loop chalayenge: Ek Student ke liye, ek Office ke liye #}
+        {% for label in ["Student Copy", "Office Copy"] %}
+        <div class="voucher-card">
+            <span class="copy-label">{{ label }}</span>
+            <div class="row school-header pb-2">
+                <div class="col-8">
+                    <h2 class="fw-bold mb-0">THE ARQAM SCHOOLS</h2>
+                    <p class="mb-0 small">Main Branch HUJRA, Punjab, Pakistan | 0301-7373573</p>
+                </div>
+                <div class="col-4 text-end">
+                    <h5 class="text-uppercase border p-1 d-inline-block">Fee Voucher</h5>
+                    <p class="small mb-0">Month: <strong>{{ v.month }} {{ v.year }}</strong></p>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-6">
+                    <p class="mb-1"><strong>Student:</strong> {{ v.name }}</p>
+                    <p class="mb-0"><strong>Father:</strong> {{ v.father_name }}</p>
+                </div>
+                <div class="col-6 text-end">
+                    <p class="mb-1"><strong>Class:</strong> {{ v.class_name }}</p>
+                    <p class="mb-0"><strong>ID:</strong> #{{ v.student_id }}</p>
+                </div>
+            </div>
+
+            <table class="table table-sm table-bordered border-dark mt-2">
+                <thead>
+                    <tr class="table-light">
+                        <th>Description</th>
+                        <th class="text-end">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Current Monthly Fee (After Discount)</td>
+                        <td class="text-end">Rs. {{ v.current_fee }}</td>
+                    </tr>
+                    <tr>
+                        <td>Previous Arrears (Pichla Baqi)</td>
+                        <td class="text-end">Rs. {{ v.arrears }}</td>
+                    </tr>
+                    <tr class="fw-bold">
+                        <td>TOTAL PAYABLE</td>
+                        <td class="text-end">Rs. {{ v.total_payable }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row mt-2">
+    <div class="col-12">
+        <div class="p-2 border border-dark rounded bg-light" style="font-size: 0.8rem;">
+            <p class="mb-1 fw-bold text-decoration-underline"><i class="fas fa-university me-1"></i> Payment Channels:</p>
+            <div class="d-flex justify-content-between">
+                <span><strong>Bank:</strong>Bank Alfalah (A/C: 0985-1007263301)</span>
+                <span><strong>EasyPaisa:</strong> 0301-7373573</span>
+                <span><strong>JazzCash:</strong> 0322-7373573</span>
+            </div>
+            <p class="mb-0 mt-1 small text-muted">* Please send screenshot after online payment.</p>
+        </div>
+    </div>
+</div>
+        
+
+            <div class="row mt-3">
+                <div class="col-6"><p class="border-top border-dark pt-1 text-center small">Depositor Sign</p></div>
+                <div class="col-6"><p class="border-top border-dark pt-1 text-center small">Accountant Sign</p></div>
+            </div>
+        </div>
+        <div class="row mt-3">
+    <div class="row mt-3">
+    <div class="col-8">
+        <div class="p-2 border border-dark small h-100" style="background-color: #f9f9f9;">
+            <p class="mb-1 fw-bold text-primary"><i class="fas fa-university me-1"></i> Bank & Online Payment:</p>
+            <p class="mb-0"><strong>Bank:</strong> Bank Alfalah | <strong>A/C:</strong> 0985-1007263301</p>
+            <p class="mb-0"><strong>EasyPaisa:</strong> 0301-7373573 (Title: FARHAT IJAZ)</p>
+            <p class="mt-2 mb-0 small text-muted font-italic" style="font-size: 0.7rem;">
+                * Payment ke baad receipt office mein jama karwayen ya WhatsApp karein.
+            </p>
+        </div>
+    </div>
+    
+    <div class="col-4 text-center">
+        <img src="/static/images/qr_code.jpeg.jpeg" 
+     alt="Payment QR" 
+     style="width: 85px; height: 85px; border: 1px solid #000; padding: 2px;">
+        <p class="mb-0" style="font-size: 0.6rem; font-weight: bold;">SCAN TO PAY</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-6"><p class="border-top border-dark pt-1 text-center small">Parent/Depositor Sign</p></div>
+    <div class="col-6"><p class="border-top border-dark pt-1 text-center small">Authorized Signature</p></div>
+</div>
+    <div class="col-4 text-center">
+        <img src="https://chart.googleapis.com/chart?chs=80x80&cht=qr&chl=Payment-For-{{ v.name }}-ID-{{ v.student_id }}&choe=UTF-8" 
+             alt="QR Code" 
+             style="border: 1px solid #000; padding: 2px;">
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-6"><p class="border-top border-dark pt-1 text-center small">Depositor Sign</p></div>
+    <div class="col-6"><p class="border-top border-dark pt-1 text-center small">Accountant Sign</p></div>
+</div>
+
+        {# Student Copy ke baad divider aayega #}
+        {% if loop.first %}
+            <div class="divider"></div>
+        {% endif %}
+        
+        {% endfor %}
+
+        {# Har bache (2 copies) ke baad agla page #}
+        <div class="page-break"></div>
+    {% endfor %}
+</div>
+
+</body>
+</html>
