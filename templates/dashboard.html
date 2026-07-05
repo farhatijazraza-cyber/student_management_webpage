@@ -6,7 +6,11 @@
         <h1 class="display-4 fw-bold text-dark">The Arqam School ERP Dashboard</h1>
         <p class="lead text-muted">Welcome to The Arqam Schools Hujra Management System</p>
     </div>
-
+<div class="text-center mb-5">
+    <a href="{{ url_for('logout') }}" class="btn btn-dark mt-3">
+        Logout
+    </a>
+</div>
     <div class="row g-4">
         <div class="col-md-3">
             <a href="{{ url_for('admission.admission_home') }}" class="text-decoration-none">

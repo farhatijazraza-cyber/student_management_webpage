@@ -84,6 +84,10 @@ def logout():
 
 # ---------------- DASHBOARD ----------------
 @app.route("/")
+def home():
+    return redirect(url_for("login"))
+
+@app.route("/dashboard")
 @login_required
 def dashboard():
     return render_template("dashboard.html")
